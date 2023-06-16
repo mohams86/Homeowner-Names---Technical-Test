@@ -74,3 +74,5 @@ After csv file gets uploaded then the Person array data will be displayed in a t
 If you need to see the Person array after file upload then you can check the array in Json format returning as finalperson_arr under Ajax request response. 
 
 You will be able to see Laravel Vue JS File Upload demo by using url http://127.0.0.1:8000 after setting up the project.
+
+Please ensure that you're using PHP 8.2 in order to run the project.
