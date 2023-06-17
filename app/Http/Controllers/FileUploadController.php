@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\FileUpload;
 use Illuminate\Support\Facades\Storage;
 
 class FileUploadController extends Controller
@@ -19,15 +18,9 @@ class FileUploadController extends Controller
             'file' => 'required|mimes:csv|max:2048'
         ]);
 
-        $fileUpload = new FileUpload();
-
         if($request->file()) {
             $file_name = time().'_'.$request->file->getClientOriginalName();
             $file_path = $request->file('file')->storeAs('uploads', $file_name, 'public');
-
-            $fileUpload->name = time().'_'.$request->file->getClientOriginalName();
-            $fileUpload->path = '/storage/' . $file_path;
-            $fileUpload->save();
 
             $csvTempArr = [];
             $uploadedCsvPath = str_replace('\\', '/', Storage::disk('public')->path($file_path));

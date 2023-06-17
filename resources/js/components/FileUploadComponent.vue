@@ -5,8 +5,11 @@
         <div class="card">
           <div class="card-header">Laravel Vue JS File Upload</div>
           <div class="card-body">
-            <div v-if="success != ''" class="alert alert-success">
-              {{ success }}
+            <div v-if="success_msg != ''" class="alert alert-success">
+              {{ success_msg }}
+            </div>
+            <div v-if="error_msg != ''" class="alert alert-danger">
+              {{ error_msg }}
             </div>
             <form @submit="formSubmit" enctype="multipart/form-data">
               <input
@@ -48,8 +51,9 @@ export default {
     return {
       name: "",
       file: "",
-      success: "",
+      success_msg: "",
       finalperson_arr: "",
+      error_msg: "",
     };
   },
   methods: {
@@ -57,13 +61,18 @@ export default {
       this.file = e.target.files[0];
     },
     formSubmit(e) {
+      let existingObj = this;
       if (!this.file) {
         e.preventDefault();
-        alert("No file chosen");
+        existingObj.error_msg = "Please select a file to upload";
+        return;
+      }
+      if (this.file.type != "text/csv") {
+        e.preventDefault();
+        existingObj.error_msg = "Please select a valid csv file";
         return;
       }
       e.preventDefault();
-      let existingObj = this;
       const config = {
         headers: {
           "content-type": "multipart/form-data",
@@ -74,11 +83,12 @@ export default {
       axios
         .post("/upload", data, config)
         .then(function (res) {
-          existingObj.success = res.data.success;
+          existingObj.success_msg = res.data.success;
           existingObj.finalperson_arr = res.data.finalperson_arr;
+          existingObj.error_msg = "";
         })
         .catch(function (err) {
-          existingObj.output = err;
+          existingObj.error_msg = err;
         });
     },
   },
